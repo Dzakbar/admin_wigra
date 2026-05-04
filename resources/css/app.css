@@ -1,11 +1,56 @@
-@import 'tailwindcss';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+@import "tailwindcss";
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+  --color-wigra-black: #0a0a0a;
+  --color-wigra-dark: #111111;
+  --color-wigra-charcoal: #1a1a1a;
+  --color-wigra-muted: #2d2d2d;
+  --color-wigra-gray: #f5f5f0;
+  --color-wigra-light: #fafaf8;
+  --color-wigra-accent: #c9544d;
+  --color-wigra-gold: #d4a853;
+  --color-wigra-text-secondary: #999999;
+  
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-wigra-black);
+    color: #ffffff;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background-color: rgba(201, 84, 77, 0.4);
+    color: #ffffff;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-wigra-black);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-wigra-muted);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #444;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-block px-8 py-3 border border-white/30 text-white font-sans text-sm tracking-[0.15em] uppercase transition-all duration-300 hover:bg-white hover:text-wigra-black;
+  }
+  .btn-accent {
+    @apply inline-block px-8 py-3 bg-wigra-accent text-white font-sans text-sm tracking-[0.15em] uppercase transition-all duration-300 hover:bg-wigra-accent/80;
+  }
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-xl;
+  }
 }
