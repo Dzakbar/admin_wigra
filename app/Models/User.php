@@ -6,6 +6,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\FilmApplication;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -42,8 +44,27 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+
+            // automatically hash password
             'password' => 'hashed',
         ];
     }
 
+    // User can have many film applications
+    public function registrations()
+    {
+        return $this->hasMany(FilmApplication::class);
+    }
+
+    // Check if user is admin
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    // Check if user is super admin
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
+    }
 }

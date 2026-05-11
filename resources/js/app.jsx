@@ -11,7 +11,7 @@ const App = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/admin/login" element={<Login />} />
+                <Route path="/login/admin" element={<Login />} />
                 <Route path="/admin" element={<Layout />}>
                     <Route index element={<DashboardOverview />} />
                     <Route path="films" element={<div className="p-6"><h1 className="text-2xl font-serif">Manage Films</h1></div>} />
