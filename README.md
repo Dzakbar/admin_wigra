@@ -102,25 +102,22 @@ composer install
 npm install
 copy .env.example .env
 php artisan key:generate
+mkdir storage\framework\cache 
+mkdir storage\framework\views 
+mkdir storage\framework\sessions
 ```
 
 Jika file `.env` sudah ada, pastikan konfigurasi lokal mengikuti bagian environment di bawah.
 
 ## Konfigurasi Environment Lokal
 
-Setup lokal default bisa memakai SQLite:
+Setup lokal default bisa memakai MySQL:
 
 ```env
-DB_CONNECTION=sqlite
+DB_CONNECTION=mysql
 SESSION_DRIVER=file
 CACHE_STORE=file
 QUEUE_CONNECTION=sync
-```
-
-Database SQLite lokal berada di:
-
-```text
-database/database.sqlite
 ```
 
 ## Menjalankan Project Lokal
@@ -129,6 +126,7 @@ Jalankan migration:
 
 ```bash
 php artisan migrate
+php artisan db:seed
 ```
 
 Jalankan server Laravel:

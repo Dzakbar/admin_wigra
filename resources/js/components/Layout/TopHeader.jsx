@@ -5,6 +5,13 @@ import { useLocation } from 'react-router-dom';
 const TopHeader = () => {
     const location = useLocation();
     
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    
+    const userName = user?.name || 'Admin';
+    const userRoleText = user?.role === 'super_admin' ? 'Super Admin' : user?.role === 'admin' ? 'Admin' : 'User';
+    const profilePic = user?.profile_photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=1a1a1a&color=fff`;
+    
     // Simple breadcrumb logic based on path
     const getPageTitle = () => {
         const path = location.pathname.split('/').pop();
@@ -20,7 +27,7 @@ const TopHeader = () => {
                 </button>
                 <div>
                     <h2 className="font-serif text-xl md:text-2xl text-white">{getPageTitle()}</h2>
-                    <p className="font-sans text-xs text-white/40 tracking-wider">Welcome back, Admin</p>
+                    <p className="font-sans text-xs text-white/40 tracking-wider">Welcome back, {userName}</p>
                 </div>
             </div>
 
@@ -45,14 +52,14 @@ const TopHeader = () => {
                 <div className="flex items-center gap-3 pl-6 border-l border-white/10">
                     <div className="w-10 h-10 rounded-full bg-wigra-muted overflow-hidden border border-white/20">
                         <img 
-                            src="https://ui-avatars.com/api/?name=Admin+Wigra&background=1a1a1a&color=fff" 
-                            alt="Admin" 
+                            src={profilePic}
+                            alt={userName} 
                             className="w-full h-full object-cover"
                         />
                     </div>
                     <div className="hidden md:block">
-                        <p className="font-sans text-sm text-white font-medium">Super Admin</p>
-                        <p className="font-sans text-xs text-white/40">admin@wigra.com</p>
+                        <p className="font-sans text-sm text-white font-medium">{userRoleText}</p>
+                        <p className="font-sans text-xs text-white/40">{user?.email || 'admin@wigra.com'}</p>
                     </div>
                 </div>
             </div>

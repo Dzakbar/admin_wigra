@@ -16,7 +16,14 @@ class EventController extends Controller
     // Create
     public function store(Request $request)
     {
-        $event = Event::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('events', 'public');
+            $data['photo'] = '/storage/' . $path;
+        }
+
+        $event = Event::create($data);
         return response()->json([
             'message' => 'Event created successfully',
             'data' => $event
@@ -34,7 +41,14 @@ class EventController extends Controller
     public function update(Request $request, $id)
     {
         $event = Event::findOrFail($id);
-        $event->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('events', 'public');
+            $data['photo'] = '/storage/' . $path;
+        }
+
+        $event->update($data);
         return response()->json([
             'message' => 'Event updated successfully',
             'data' => $event

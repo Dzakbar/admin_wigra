@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axios';
 
 const Login = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate API call
-        setTimeout(() => {
+        setError('');
+        
+        try {
+            const response = await api.post('/login', { email, password });
+            const { access_token, user } = response.data;
+            
+            if (access_token) {
+                localStorage.setItem('auth_token', access_token);
+                localStorage.setItem('user', JSON.stringify(user));
+                navigate('/admin');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Login failed. Please try again.');
+        } finally {
             setIsLoading(false);
-            navigate('/admin');
-        }, 1500);
+        }
     };
 
     return (
@@ -28,14 +43,21 @@ const Login = () => {
                 </div>
 
                 <div className="glass-card p-8">
+                    {error && (
+                        <div className="bg-red-500/10 border border-red-500/50 text-red-400 text-sm p-3 rounded-lg mb-4 text-center">
+                            {error}
+                        </div>
+                    )}
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div>
                             <label className="block font-sans text-xs uppercase tracking-widest text-white/60 mb-2">Email Address</label>
                             <input 
                                 type="email" 
                                 required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-wigra-accent focus:ring-1 focus:ring-wigra-accent transition-all"
-                                placeholder="admin@wigra.com"
+                                placeholder="user@gmail.com"
                             />
                         </div>
 
@@ -47,6 +69,8 @@ const Login = () => {
                             <input 
                                 type="password" 
                                 required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-wigra-accent focus:ring-1 focus:ring-wigra-accent transition-all"
                                 placeholder="••••••••"
                             />
