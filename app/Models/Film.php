@@ -19,6 +19,10 @@ class Film extends Model
     'duration',
     'genre',
     'synopsis',
-    'photo'
+    'photo',
+    'category',
+    'application_start_date',
+    'application_deadline',
+    'roles_needed'
 ];
 }

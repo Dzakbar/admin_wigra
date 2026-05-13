@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             // relation to user account
             $table->foreignId('user_id')
+                  ->nullable()
                   ->constrained()
                   ->onDelete('cascade');
             // relation to film
@@ -22,12 +23,18 @@ return new class extends Migration
                   ->constrained()
                   ->onDelete('cascade');
             $table->string('name');
-            $table->integer('age');
-            $table->enum('gender', ['male', 'female']);
-            // CV / portfolio / document
-            $table->string('document');
-            $table->string('telephone_number');
-            $table->string('email');
+            $table->string('contact'); // email or phone number
+            $table->enum('role', [
+                'Talent',
+                'Astrada',
+                'DOP',
+                'ART',
+                'Wardrobe',
+                'Sound',
+                'Gaffer'
+            ]);
+            $table->string('portfolio_link')->nullable();
+            $table->text('notes')->nullable();
             // application status
             $table->enum('status', [
                 'pending',

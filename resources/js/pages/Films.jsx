@@ -17,7 +17,11 @@ const Films = () => {
         duration: '',
         genre: '',
         synopsis: '',
-        photo: null
+        photo: null,
+        category: 'films',
+        application_start_date: '',
+        application_deadline: '',
+        roles_needed: ''
     });
 
     const fetchFilms = async () => {
@@ -53,7 +57,11 @@ const Films = () => {
                 duration: film.duration || '',
                 genre: film.genre || '',
                 synopsis: film.synopsis || '',
-                photo: null
+                photo: null,
+                category: film.category || 'films',
+                application_start_date: film.application_start_date || '',
+                application_deadline: film.application_deadline || '',
+                roles_needed: film.roles_needed || ''
             });
             setCurrentFilm(film);
         } else {
@@ -65,7 +73,11 @@ const Films = () => {
                 duration: '',
                 genre: '',
                 synopsis: '',
-                photo: null
+                photo: null,
+                category: 'films',
+                application_start_date: '',
+                application_deadline: '',
+                roles_needed: ''
             });
             setCurrentFilm(null);
         }
@@ -89,6 +101,13 @@ const Films = () => {
         data.append('director_name', formData.director_name);
         data.append('duration', formData.duration);
         data.append('genre', formData.genre);
+        data.append('category', formData.category);
+        
+        if (formData.category === 'upcoming') {
+            data.append('application_start_date', formData.application_start_date);
+            data.append('application_deadline', formData.application_deadline);
+            data.append('roles_needed', formData.roles_needed);
+        }
         if (formData.synopsis) {
             data.append('synopsis', formData.synopsis);
         }
@@ -175,6 +194,7 @@ const Films = () => {
                             <tr className="border-b border-white/10 text-white/50 uppercase tracking-wider text-xs font-medium">
                                 <th className="py-3 px-4">Poster</th>
                                 <th className="py-3 px-4">Title</th>
+                                <th className="py-3 px-4">Category</th>
                                 <th className="py-3 px-4">Director</th>
                                 <th className="py-3 px-4">Duration</th>
                                 <th className="py-3 px-4">Genre</th>
@@ -184,13 +204,13 @@ const Films = () => {
                         <tbody className="divide-y divide-white/5">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan="6" className="py-10 text-center text-white/50">
+                                    <td colSpan="7" className="py-10 text-center text-white/50">
                                         <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
                                     </td>
                                 </tr>
                             ) : films.length === 0 ? (
                                 <tr>
-                                    <td colSpan="6" className="py-10 text-center text-white/50">No films found. Create one above!</td>
+                                    <td colSpan="7" className="py-10 text-center text-white/50">No films found. Create one above!</td>
                                 </tr>
                             ) : (
                                 films.map(film => (
@@ -207,6 +227,15 @@ const Films = () => {
                                         <td className="py-4 px-4">
                                             <div className="font-medium text-white">{film.name}</div>
                                             <div className="text-xs text-white/40 truncate max-w-xs">{film.video}</div>
+                                        </td>
+                                        <td className="py-4 px-4">
+                                            <span className={`px-2 py-1 text-xs rounded-md font-medium uppercase tracking-wider ${
+                                                film.category === 'upcoming' ? 'bg-yellow-500/20 text-yellow-400' :
+                                                film.category === 'other project' ? 'bg-blue-500/20 text-blue-400' :
+                                                'bg-wigra-accent/20 text-wigra-accent'
+                                            }`}>
+                                                {film.category || 'films'}
+                                            </span>
                                         </td>
                                         <td className="py-4 px-4 text-white/80">{film.director_name}</td>
                                         <td className="py-4 px-4 text-white/80">{film.duration} min</td>
@@ -255,6 +284,14 @@ const Films = () => {
                                     <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-wigra-accent" placeholder="Interstellar" />
                                 </div>
                                 <div className="md:col-span-2">
+                                    <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Category</label>
+                                    <select name="category" value={formData.category} onChange={handleChange} className="w-full bg-wigra-black border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-wigra-accent">
+                                        <option value="films">Films</option>
+                                        <option value="other project">Other Project</option>
+                                        <option value="upcoming">Upcoming</option>
+                                    </select>
+                                </div>
+                                <div className="md:col-span-2">
                                     <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Video Link (URL)</label>
                                     <input type="text" name="video" required value={formData.video} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-wigra-accent" placeholder="https://youtube.com/..." />
                                 </div>
@@ -274,6 +311,23 @@ const Films = () => {
                                     <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Synopsis</label>
                                     <textarea name="synopsis" rows="3" value={formData.synopsis || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-wigra-accent resize-none" placeholder="A team of explorers travel through a wormhole..."></textarea>
                                 </div>
+                                
+                                {formData.category === 'upcoming' && (
+                                    <>
+                                        <div>
+                                            <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Application Start Date</label>
+                                            <input type="date" name="application_start_date" value={formData.application_start_date} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-wigra-accent" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Application Deadline</label>
+                                            <input type="date" name="application_deadline" value={formData.application_deadline} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-wigra-accent" />
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Roles Needed (comma separated)</label>
+                                            <input type="text" name="roles_needed" value={formData.roles_needed} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-wigra-accent" placeholder="Talent, Astrada, DOP" />
+                                        </div>
+                                    </>
+                                )}
                                 <div className="md:col-span-2">
                                     <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Poster Image</label>
                                     {currentFilm?.photo && !formData.photo && (
@@ -332,6 +386,13 @@ const Films = () => {
                                 </div>
                             )}
                             <div className="flex items-center gap-2 mb-4 flex-wrap">
+                                <span className={`px-3 py-1 text-xs font-medium rounded-full uppercase tracking-wider ${
+                                    viewingFilm.category === 'upcoming' ? 'bg-yellow-500/20 text-yellow-400' :
+                                    viewingFilm.category === 'other project' ? 'bg-blue-500/20 text-blue-400' :
+                                    'bg-wigra-accent/20 text-wigra-accent'
+                                }`}>
+                                    {viewingFilm.category || 'films'}
+                                </span>
                                 <span className="px-3 py-1 bg-wigra-accent/20 text-wigra-accent text-xs font-medium rounded-full">
                                     {viewingFilm.genre}
                                 </span>
@@ -353,6 +414,31 @@ const Films = () => {
                                         )}
                                     </div>
                                 </div>
+
+                                {viewingFilm.category === 'upcoming' && (
+                                    <div className="pt-4 border-t border-white/10 space-y-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-1">Application Starts</h3>
+                                                <p className="text-white text-sm">{viewingFilm.application_start_date || 'N/A'}</p>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xs uppercase tracking-wider text-white/40 mb-1">Deadline</h3>
+                                                <p className="text-red-400 text-sm font-medium">{viewingFilm.application_deadline || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xs uppercase tracking-wider text-white/40 mb-1">Roles Needed</h3>
+                                            <div className="flex flex-wrap gap-2">
+                                                {(viewingFilm.roles_needed || '').split(',').map((role, i) => (
+                                                    <span key={i} className="px-2 py-0.5 bg-white/5 border border-white/10 text-white/70 text-[10px] rounded uppercase">
+                                                        {role.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

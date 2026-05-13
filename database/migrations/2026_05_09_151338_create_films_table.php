@@ -21,6 +21,10 @@ return new class extends Migration
             $table->string('genre');
             $table->text('synopsis')->nullable();
             $table->string('photo')->nullable();
+            $table->string('category')->default('films');
+            $table->date('application_start_date')->nullable();
+            $table->date('application_deadline')->nullable();
+            $table->string('roles_needed')->nullable();
             $table->timestamps();
         });
     }
