@@ -31,6 +31,14 @@ Route::get('/storage/teams/{filename}', function ($filename) {
     return response()->file($path);
 });
 
+Route::get('/storage/films/{filename}', function ($filename) {
+    $path = storage_path('app/public/films/' . $filename);
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    return response()->file($path);
+});
+
 Route::get('/{any?}', function () {
     return view('welcome');
 })->where('any', '.*');

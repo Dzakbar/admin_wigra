@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             FilmSeeder::class,
             FilmApplicationSeeder::class,
+            TeamSeeder::class,
         ]);
     }
 }

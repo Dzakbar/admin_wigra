@@ -8,6 +8,7 @@ const Films = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [viewingFilm, setViewingFilm] = useState(null);
+    const [currentFilm, setCurrentFilm] = useState(null);
     const [formData, setFormData] = useState({
         id: null,
         video: '',
@@ -15,7 +16,8 @@ const Films = () => {
         director_name: '',
         duration: '',
         genre: '',
-        synopsis: ''
+        synopsis: '',
+        photo: null
     });
 
     const fetchFilms = async () => {
@@ -43,7 +45,17 @@ const Films = () => {
 
     const handleOpenModal = (film = null) => {
         if (film) {
-            setFormData(film);
+            setFormData({
+                id: film.id,
+                video: film.video || '',
+                name: film.name || '',
+                director_name: film.director_name || '',
+                duration: film.duration || '',
+                genre: film.genre || '',
+                synopsis: film.synopsis || '',
+                photo: null
+            });
+            setCurrentFilm(film);
         } else {
             setFormData({
                 id: null,
@@ -52,8 +64,10 @@ const Films = () => {
                 director_name: '',
                 duration: '',
                 genre: '',
-                synopsis: ''
+                synopsis: '',
+                photo: null
             });
+            setCurrentFilm(null);
         }
         setIsModalOpen(true);
     };
@@ -68,11 +82,30 @@ const Films = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('video', formData.video);
+        data.append('director_name', formData.director_name);
+        data.append('duration', formData.duration);
+        data.append('genre', formData.genre);
+        if (formData.synopsis) {
+            data.append('synopsis', formData.synopsis);
+        }
+        if (formData.photo) {
+            data.append('photo', formData.photo);
+        }
+
         try {
             if (formData.id) {
-                await api.put(`/films/${formData.id}`, formData);
+                data.append('_method', 'PUT');
+                await api.post(`/films/${formData.id}`, data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
             } else {
-                await api.post('/films', formData);
+                await api.post('/films', data, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
             }
             handleCloseModal();
             fetchFilms();
@@ -140,6 +173,7 @@ const Films = () => {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="border-b border-white/10 text-white/50 uppercase tracking-wider text-xs font-medium">
+                                <th className="py-3 px-4">Poster</th>
                                 <th className="py-3 px-4">Title</th>
                                 <th className="py-3 px-4">Director</th>
                                 <th className="py-3 px-4">Duration</th>
@@ -150,17 +184,26 @@ const Films = () => {
                         <tbody className="divide-y divide-white/5">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan="5" className="py-10 text-center text-white/50">
+                                    <td colSpan="6" className="py-10 text-center text-white/50">
                                         <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
                                     </td>
                                 </tr>
                             ) : films.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="py-10 text-center text-white/50">No films found. Create one above!</td>
+                                    <td colSpan="6" className="py-10 text-center text-white/50">No films found. Create one above!</td>
                                 </tr>
                             ) : (
                                 films.map(film => (
                                     <tr key={film.id} className="hover:bg-white/5 transition-colors group">
+                                        <td className="py-4 px-4">
+                                            <div className="w-12 h-16 rounded-md overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                                                {film.photo ? (
+                                                    <img src={film.photo} alt={film.name} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <Film className="w-5 h-5 text-white/20" />
+                                                )}
+                                            </div>
+                                        </td>
                                         <td className="py-4 px-4">
                                             <div className="font-medium text-white">{film.name}</div>
                                             <div className="text-xs text-white/40 truncate max-w-xs">{film.video}</div>
@@ -231,6 +274,21 @@ const Films = () => {
                                     <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Synopsis</label>
                                     <textarea name="synopsis" rows="3" value={formData.synopsis || ''} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-wigra-accent resize-none" placeholder="A team of explorers travel through a wormhole..."></textarea>
                                 </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">Poster Image</label>
+                                    {currentFilm?.photo && !formData.photo && (
+                                        <div className="mb-2 w-16 h-20 rounded-md overflow-hidden border border-white/10">
+                                            <img src={currentFilm.photo} alt="Current poster" className="w-full h-full object-cover" />
+                                        </div>
+                                    )}
+                                    <input 
+                                        type="file" 
+                                        accept="image/*"
+                                        onChange={(e) => setFormData({ ...formData, photo: e.target.files[0] })}
+                                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-wigra-accent/20 file:text-wigra-accent hover:file:bg-wigra-accent/30 transition-all" 
+                                    />
+                                    <p className="text-xs text-white/40 mt-1">Upload a vertical movie poster image.</p>
+                                </div>
                             </div>
                             
                             <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/10">
@@ -267,7 +325,12 @@ const Films = () => {
                             )}
                         </div>
 
-                        <div className="w-full md:w-1/3 p-8 overflow-y-auto bg-wigra-black/50">
+                        <div className="w-full md:w-1/3 p-8 overflow-y-auto bg-wigra-black/50 flex flex-col">
+                            {viewingFilm.photo && (
+                                <div className="w-24 h-32 rounded-md overflow-hidden border border-white/10 shrink-0 mb-4 shadow-lg">
+                                    <img src={viewingFilm.photo} alt={viewingFilm.name} className="w-full h-full object-cover" />
+                                </div>
+                            )}
                             <div className="flex items-center gap-2 mb-4 flex-wrap">
                                 <span className="px-3 py-1 bg-wigra-accent/20 text-wigra-accent text-xs font-medium rounded-full">
                                     {viewingFilm.genre}

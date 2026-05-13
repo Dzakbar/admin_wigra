@@ -18,6 +18,7 @@ class Film extends Model
     'director_name',
     'duration',
     'genre',
-    'synopsis'
+    'synopsis',
+    'photo'
 ];
 }

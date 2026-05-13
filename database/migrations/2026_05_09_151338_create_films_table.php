@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('duration');
             $table->string('genre');
             $table->text('synopsis')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }

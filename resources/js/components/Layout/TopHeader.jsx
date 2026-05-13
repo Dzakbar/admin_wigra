@@ -2,7 +2,7 @@ import React from 'react';
 import { Bell, Search, Menu } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
-const TopHeader = () => {
+const TopHeader = ({ onToggleSidebar }) => {
     const location = useLocation();
     
     const userString = localStorage.getItem('user');
@@ -22,7 +22,7 @@ const TopHeader = () => {
     return (
         <header className="h-20 bg-wigra-dark/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-8 sticky top-0 z-10">
             <div className="flex items-center gap-4">
-                <button className="lg:hidden text-white/60 hover:text-white">
+                <button onClick={onToggleSidebar} className="lg:hidden text-white/60 hover:text-white">
                     <Menu size={24} />
                 </button>
                 <div>

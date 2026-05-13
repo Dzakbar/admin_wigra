@@ -13,10 +13,17 @@ class FilmController extends Controller
         return response()->json(Film::all());
     }
 
-    // Creata film
+    // Create film
     public function store(Request $request)
     {
-        $film = Film::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('films', 'public');
+            $data['photo'] = '/storage/' . $path;
+        }
+
+        $film = Film::create($data);
         return response()->json([
             'message' => 'Film created successfully',
             'data' => $film
@@ -34,7 +41,14 @@ class FilmController extends Controller
     public function update(Request $request, $id)
     {
         $film = Film::findOrFail($id);
-        $film->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('films', 'public');
+            $data['photo'] = '/storage/' . $path;
+        }
+
+        $film->update($data);
         return response()->json([
             'message' => 'Film updated successfully',
             'data' => $film

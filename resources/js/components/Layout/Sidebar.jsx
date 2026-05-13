@@ -8,10 +8,11 @@ import {
     Users, 
     Star,
     LogOut,
-    UsersRound
+    UsersRound,
+    X
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
@@ -30,14 +31,30 @@ const Sidebar = () => {
     }
 
     return (
-        <aside className="w-64 h-screen bg-wigra-dark border-r border-white/10 flex flex-col fixed left-0 top-0">
-            {/* Logo Area */}
-            <div className="h-20 flex items-center px-8 border-b border-white/10">
-                <h1 className="font-serif text-2xl tracking-widest text-white">WIGRA.</h1>
-                <span className="text-[10px] uppercase tracking-widest text-wigra-accent ml-2 mt-1">Admin</span>
-            </div>
+        <>
+            {/* Mobile Backdrop */}
+            {isOpen && (
+                <div 
+                    className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm lg:hidden animate-fade-in"
+                    onClick={onClose}
+                />
+            )}
 
-            {/* Navigation */}
+            <aside className={`w-64 h-screen bg-wigra-dark border-r border-white/10 flex flex-col fixed left-0 top-0 z-50 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+                isOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}>
+                {/* Logo Area */}
+                <div className="h-20 flex items-center justify-between px-8 border-b border-white/10 shrink-0">
+                    <div className="flex items-center">
+                        <h1 className="font-serif text-2xl tracking-widest text-white">WIGRA.</h1>
+                        <span className="text-[10px] uppercase tracking-widest text-wigra-accent ml-2 mt-1">Admin</span>
+                    </div>
+                    <button onClick={onClose} className="lg:hidden text-white/60 hover:text-white">
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* Navigation */}
             <nav className="flex-1 py-8 px-4 flex flex-col gap-2 overflow-y-auto">
                 <div className="text-xs font-sans text-white/40 uppercase tracking-widest mb-2 px-4">Menu</div>
                 
@@ -46,6 +63,7 @@ const Sidebar = () => {
                         key={item.path}
                         to={item.path}
                         end={item.exact}
+                        onClick={onClose}
                         className={({ isActive }) => `
                             flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300
                             ${isActive 
@@ -63,6 +81,7 @@ const Sidebar = () => {
                         <div className="text-xs font-sans text-white/40 uppercase tracking-widest mt-6 mb-2 px-4">System</div>
                         <NavLink
                             to="/admin/manage-users"
+                            onClick={onClose}
                             className={({ isActive }) => `
                                 flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300
                                 ${isActive 
@@ -98,6 +117,7 @@ const Sidebar = () => {
                 </button>
             </div>
         </aside>
+        </>
     );
 };
 
