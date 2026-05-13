@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FilmApplication;
-use App\Notifications\FilmApplicationSubmittedNotification;
+use App\Notifications\FilmApplicationAcceptedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -33,17 +33,6 @@ class FilmApplicationController extends Controller
             'status' => 'pending',
         ]);
 
-        try {
-            Notification::route('mail', $application->email)
-                ->notify(new FilmApplicationSubmittedNotification($application));
-        } catch (Throwable $e) {
-            Log::warning('Failed to send film application success email', [
-                'film_application_id' => $application->id,
-                'email' => $application->email,
-                'error' => $e->getMessage(),
-            ]);
-        }
-
         return response()->json([
             'message' => 'Application submitted successfully',
             'data' => $application
@@ -62,6 +51,7 @@ class FilmApplicationController extends Controller
     public function update(Request $request, $id)
     {
         $application = FilmApplication::findOrFail($id);
+        $previousStatus = $application->status;
 
         $application->update([
             'name' => $request->name,
@@ -71,6 +61,28 @@ class FilmApplicationController extends Controller
             'notes' => $request->notes,
             'status' => $request->status,
         ]);
+
+        if ($previousStatus !== 'accepted' && $application->status === 'accepted') {
+            $email = $this->extractEmailFromContact($application->contact);
+
+            if ($email) {
+                try {
+                    Notification::route('mail', $email)
+                        ->notify(new FilmApplicationAcceptedNotification($application));
+                } catch (Throwable $e) {
+                    Log::warning('Failed to send film application accepted email', [
+                        'film_application_id' => $application->id,
+                        'email' => $email,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            } else {
+                Log::warning('Film application accepted without a valid email contact', [
+                    'film_application_id' => $application->id,
+                    'contact' => $application->contact,
+                ]);
+            }
+        }
 
         return response()->json([
             'message' => 'Application updated successfully',
@@ -88,5 +100,18 @@ class FilmApplicationController extends Controller
         return response()->json([
             'message' => 'Application deleted successfully'
         ]);
+    }
+
+    private function extractEmailFromContact(?string $contact): ?string
+    {
+        if (! $contact) {
+            return null;
+        }
+
+        preg_match('/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i', $contact, $matches);
+
+        return isset($matches[0]) && filter_var($matches[0], FILTER_VALIDATE_EMAIL)
+            ? $matches[0]
+            : null;
     }
 }

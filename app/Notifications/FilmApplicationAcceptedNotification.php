@@ -2,12 +2,13 @@
 
 namespace App\Notifications;
 
+use App\Models\Film;
 use App\Models\FilmApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class FilmApplicationSubmittedNotification extends Notification
+class FilmApplicationAcceptedNotification extends Notification
 {
     use Queueable;
 
@@ -26,12 +27,15 @@ class FilmApplicationSubmittedNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
+        $filmName = Film::query()
+            ->whereKey($this->application->film_id)
+            ->value('name');
+
         return (new MailMessage)
-            ->subject('Pendaftaran Film Berhasil')
-            ->greeting('Halo ' . $this->application->name)
-            ->line('Pendaftaran Anda berhasil kami terima.')
-            ->line('Film ID: #' . $this->application->film_id)
-            ->line('Status pendaftaran saat ini: pending.')
-            ->line('Terima kasih sudah mendaftar.');
+            ->subject('Pendaftaran Film Diterima')
+            ->view('emails.film-application-accepted', [
+                'application' => $this->application,
+                'filmName' => $filmName,
+            ]);
     }
 }
