@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\FilmApplication;
+use App\Notifications\FilmApplicationSubmittedNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
+use Throwable;
 
 class FilmApplicationController extends Controller
 {
@@ -29,6 +33,17 @@ class FilmApplicationController extends Controller
             'email' => $request->email,
             'status' => 'pending',
         ]);
+
+        try {
+            Notification::route('mail', $application->email)
+                ->notify(new FilmApplicationSubmittedNotification($application));
+        } catch (Throwable $e) {
+            Log::warning('Failed to send film application success email', [
+                'film_application_id' => $application->id,
+                'email' => $application->email,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         return response()->json([
             'message' => 'Application submitted successfully',
