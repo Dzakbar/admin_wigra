@@ -20,11 +20,10 @@ class FilmApplication extends Model
         'user_id',
         'film_id',
         'name',
-        'age',
-        'gender',
-        'document',
-        'telephone_number',
-        'email',
+        'contact',
+        'role',
+        'portfolio_link',
+        'notes',
         'status',
     ];
 

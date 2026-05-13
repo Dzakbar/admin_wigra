@@ -16,11 +16,10 @@ const ApplyFilm = () => {
         user_id: user ? user.id : '',
         film_id: '',
         name: user ? user.name : '',
-        age: '',
-        gender: 'male',
-        document: '',
-        telephone_number: user ? user.telephone_number : '',
-        email: user ? user.email : '',
+        contact: user ? `${user.email} / ${user.telephone_number || ''}` : '',
+        role: 'Talent',
+        portfolio_link: '',
+        notes: ''
     });
 
     useEffect(() => {
@@ -63,11 +62,10 @@ const ApplyFilm = () => {
                 user_id: user.id,
                 film_id: films.length > 0 ? films[0].id : '',
                 name: user.name,
-                age: '',
-                gender: 'male',
-                document: '',
-                telephone_number: user.telephone_number,
-                email: user.email,
+                contact: `${user.email} / ${user.telephone_number || ''}`,
+                role: 'Talent',
+                portfolio_link: '',
+                notes: ''
             });
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to submit application.');
@@ -128,32 +126,33 @@ const ApplyFilm = () => {
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
+                                    <div className="md:col-span-2">
                                         <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Full Name</label>
                                         <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" />
                                     </div>
-                                    <div>
-                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Email</label>
-                                        <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" />
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Contact Info (Email / WhatsApp)</label>
+                                        <input type="text" name="contact" required value={formData.contact} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" placeholder="example@mail.com / 0812..." />
                                     </div>
                                     <div>
-                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Telephone</label>
-                                        <input type="tel" name="telephone_number" required value={formData.telephone_number} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Age</label>
-                                        <input type="number" name="age" required min="1" max="100" value={formData.age} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Gender</label>
-                                        <select name="gender" required value={formData.gender} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent">
-                                            <option value="male" className="bg-wigra-black">Male</option>
-                                            <option value="female" className="bg-wigra-black">Female</option>
+                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Target Role</label>
+                                        <select name="role" required value={formData.role} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent">
+                                            <option value="Talent" className="bg-wigra-black">Talent</option>
+                                            <option value="Astrada" className="bg-wigra-black">Astrada</option>
+                                            <option value="DOP" className="bg-wigra-black">DOP</option>
+                                            <option value="ART" className="bg-wigra-black">ART</option>
+                                            <option value="Wardrobe" className="bg-wigra-black">Wardrobe</option>
+                                            <option value="Sound" className="bg-wigra-black">Sound</option>
+                                            <option value="Gaffer" className="bg-wigra-black">Gaffer</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Document URL (CV/Portfolio)</label>
-                                        <input type="text" name="document" required value={formData.document} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" placeholder="https://drive.google.com/..." />
+                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Portfolio Link</label>
+                                        <input type="url" name="portfolio_link" required value={formData.portfolio_link} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" placeholder="https://..." />
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Notes / Experience</label>
+                                        <textarea name="notes" rows="4" value={formData.notes} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent resize-none" placeholder="Tell us more about your experience..."></textarea>
                                     </div>
                                 </div>
 

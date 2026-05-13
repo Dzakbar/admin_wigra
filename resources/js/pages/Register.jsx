@@ -34,7 +34,13 @@ const Register = () => {
             if (access_token) {
                 localStorage.setItem('auth_token', access_token);
                 localStorage.setItem('user', JSON.stringify(user));
-                navigate('/admin');
+                
+                if (user.role === 'admin' || user.role === 'superadmin' || user.role === 'super_admin') {
+                    navigate('/admin');
+                } else {
+                    const companyUrl = `http://localhost:8181/auth-callback?token=${access_token}&user=${encodeURIComponent(JSON.stringify(user))}`;
+                    window.location.href = companyUrl;
+                }
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed. Please try again.');

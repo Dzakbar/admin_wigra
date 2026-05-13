@@ -22,11 +22,10 @@ class FilmApplicationController extends Controller
             'user_id' => $request->user_id,
             'film_id' => $request->film_id,
             'name' => $request->name,
-            'age' => $request->age,
-            'gender' => $request->gender,
-            'document' => $request->document,
-            'telephone_number' => $request->telephone_number,
-            'email' => $request->email,
+            'contact' => $request->contact,
+            'role' => $request->role,
+            'portfolio_link' => $request->portfolio_link,
+            'notes' => $request->notes,
             'status' => 'pending',
         ]);
 
@@ -51,11 +50,10 @@ class FilmApplicationController extends Controller
 
         $application->update([
             'name' => $request->name,
-            'age' => $request->age,
-            'gender' => $request->gender,
-            'document' => $request->document,
-            'telephone_number' => $request->telephone_number,
-            'email' => $request->email,
+            'contact' => $request->contact,
+            'role' => $request->role,
+            'portfolio_link' => $request->portfolio_link,
+            'notes' => $request->notes,
             'status' => $request->status,
         ]);
 

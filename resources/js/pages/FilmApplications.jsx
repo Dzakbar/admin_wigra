@@ -89,7 +89,9 @@ const FilmApplications = () => {
                         <thead>
                             <tr className="border-b border-white/10 text-white/50 uppercase tracking-wider text-xs font-medium">
                                 <th className="py-3 px-4">Applicant</th>
-                                <th className="py-3 px-4">Film Applied For</th>
+                                <th className="py-3 px-4">Contact</th>
+                                <th className="py-3 px-4">Role</th>
+                                <th className="py-3 px-4">Project</th>
                                 <th className="py-3 px-4">Details</th>
                                 <th className="py-3 px-4">Status</th>
                                 <th className="py-3 px-4 text-right">Actions</th>
@@ -98,33 +100,40 @@ const FilmApplications = () => {
                         <tbody className="divide-y divide-white/5">
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan="5" className="py-10 text-center text-white/50">
+                                    <td colSpan="6" className="py-10 text-center text-white/50">
                                         <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
                                     </td>
                                 </tr>
                             ) : applications.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="py-10 text-center text-white/50">No applications found.</td>
+                                    <td colSpan="6" className="py-10 text-center text-white/50">No applications found.</td>
                                 </tr>
                             ) : (
                                 applications.map(app => (
                                     <tr key={app.id} className="hover:bg-white/5 transition-colors group">
                                         <td className="py-4 px-4">
                                             <div className="font-medium text-white">{app.name}</div>
-                                            <div className="text-xs text-white/40">{app.email}</div>
-                                            <div className="text-xs text-white/40">{app.telephone_number}</div>
                                         </td>
-                                        <td className="py-4 px-4 text-white/80">
-                                            {app.film ? app.film.name : `Film ID: ${app.film_id}`}
+                                        <td className="py-4 px-4 text-xs text-white/60">
+                                            {app.contact}
                                         </td>
                                         <td className="py-4 px-4">
-                                            <div className="text-xs text-white/60">Age: {app.age}</div>
-                                            <div className="text-xs text-white/60 capitalize">Gender: {app.gender}</div>
-                                            {app.document && (
-                                                <a href={app.document} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-xs text-wigra-accent hover:underline mt-1">
-                                                    <FileText className="w-3 h-3" /> View Document
+                                            <span className="px-2 py-0.5 bg-wigra-accent/10 border border-wigra-accent/20 text-wigra-accent text-[10px] rounded uppercase font-medium">
+                                                {app.role}
+                                            </span>
+                                        </td>
+                                        <td className="py-4 px-4 text-white/80">
+                                            {app.film ? app.film.name : `ID: ${app.film_id}`}
+                                        </td>
+                                        <td className="py-4 px-4">
+                                            {app.portfolio_link && (
+                                                <a href={app.portfolio_link} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-xs text-wigra-accent hover:underline mb-1">
+                                                    <FileText className="w-3 h-3" /> Portfolio
                                                 </a>
                                             )}
+                                            <div className="text-[10px] text-white/40 italic max-w-[150px] truncate" title={app.notes}>
+                                                {app.notes || 'No notes provided.'}
+                                            </div>
                                         </td>
                                         <td className="py-4 px-4">
                                             <select 

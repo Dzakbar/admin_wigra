@@ -16,24 +16,22 @@ class FilmApplicationSeeder extends Seeder
         FilmApplication::create([
             'user_id' => 3,
             'film_id' => 1,
-            'name' => 'Normal User',
-            'age' => 22,
-            'gender' => 'male',
-            'document' => 'documents/cv1.pdf',
-            'telephone_number' => '083333333333',
-            'email' => 'user@gmail.com',
+            'name' => 'John Doe',
+            'contact' => 'john@example.com / 08123456789',
+            'role' => 'Talent',
+            'portfolio_link' => 'https://portfolio.com/johndoe',
+            'notes' => 'I have 5 years of experience in acting.',
             'status' => 'pending'
         ]);
 
         FilmApplication::create([
             'user_id' => 3,
             'film_id' => 2,
-            'name' => 'Normal User',
-            'age' => 22,
-            'gender' => 'male',
-            'document' => 'documents/cv2.pdf',
-            'telephone_number' => '083333333333',
-            'email' => 'user@gmail.com',
+            'name' => 'Jane Smith',
+            'contact' => 'jane@example.com',
+            'role' => 'DOP',
+            'portfolio_link' => 'https://vimeo.com/janesmith',
+            'notes' => 'I worked on several indie films before.',
             'status' => 'accepted'
         ]);
     }
