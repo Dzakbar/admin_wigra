@@ -5,7 +5,7 @@ import { Trash2, UserCheck, FileText, X } from 'lucide-react';
 const FilmApplications = () => {
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
-    const isSuperAdmin = user?.role === 'super_admin';
+    const isSuperAdmin = user?.role === 'super_admin' || user?.role === 'superadmin';
 
     const [applications, setApplications] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -115,7 +115,10 @@ const FilmApplications = () => {
                                             <div className="font-medium text-white">{app.name}</div>
                                         </td>
                                         <td className="py-4 px-4 text-xs text-white/60">
-                                            {app.contact}
+                                            <div>{app.contact}</div>
+                                            {app.phone_number && (
+                                                <div className="mt-1 text-white/40">{app.phone_number}</div>
+                                            )}
                                         </td>
                                         <td className="py-4 px-4">
                                             <span className="px-2 py-0.5 bg-wigra-accent/10 border border-wigra-accent/20 text-wigra-accent text-[10px] rounded uppercase font-medium">

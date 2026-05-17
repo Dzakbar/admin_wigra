@@ -43,7 +43,9 @@ const Register = () => {
                 }
             }
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+            const validationErrors = err.response?.data?.errors;
+            const firstValidationError = validationErrors ? Object.values(validationErrors)[0]?.[0] : null;
+            setError(firstValidationError || err.response?.data?.message || 'Registration failed. Please try again.');
         } finally {
             setIsLoading(false);
         }

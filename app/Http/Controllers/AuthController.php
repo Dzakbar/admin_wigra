@@ -11,6 +11,16 @@ class AuthController extends Controller
     // Register
     public function register(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'telephone_number' => 'required|string|max:20',
+            'password' => 'required|string|min:6',
+            'profile_photo' => 'nullable|image|max:2048',
+        ], [
+            'email.unique' => 'Email has already been used.',
+        ]);
+
         $profilePhotoUrl = null;
         if ($request->hasFile('profile_photo')) {
             $path = $request->file('profile_photo')->store('profiles', 'public');
@@ -31,6 +41,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Register success',
             'data' => $user,
+            'user' => $user,
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);

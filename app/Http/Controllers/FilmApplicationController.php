@@ -22,14 +22,28 @@ class FilmApplicationController extends Controller
     // Application Form
     public function store(Request $request)
     {
+        $this->normalizeContactFields($request);
+
+        $validated = $request->validate([
+            'user_id' => 'nullable|exists:users,id',
+            'film_id' => 'required|exists:films,id',
+            'name' => 'required|string|max:255',
+            'contact' => 'required|email|max:255',
+            'phone_number' => ['required', 'string', 'max:20', 'regex:/^(?=(?:\D*\d){10,})[+\d][\d\s().-]*$/'],
+            'role' => 'required|string|max:255',
+            'portfolio_link' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+        ]);
+
         $application = FilmApplication::create([
-            'user_id' => $request->user_id,
-            'film_id' => $request->film_id,
-            'name' => $request->name,
-            'contact' => $request->contact,
-            'role' => $request->role,
-            'portfolio_link' => $request->portfolio_link,
-            'notes' => $request->notes,
+            'user_id' => $validated['user_id'] ?? null,
+            'film_id' => $validated['film_id'],
+            'name' => $validated['name'],
+            'contact' => $validated['contact'],
+            'phone_number' => $validated['phone_number'],
+            'role' => $validated['role'],
+            'portfolio_link' => $validated['portfolio_link'],
+            'notes' => $validated['notes'] ?? null,
             'status' => 'pending',
         ]);
 
@@ -52,18 +66,30 @@ class FilmApplicationController extends Controller
     {
         $application = FilmApplication::findOrFail($id);
         $previousStatus = $application->status;
+        $this->normalizeContactFields($request);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'contact' => 'required|email|max:255',
+            'phone_number' => ['nullable', 'string', 'max:20', 'regex:/^(?=(?:\D*\d){10,})[+\d][\d\s().-]*$/'],
+            'role' => 'required|string|max:255',
+            'portfolio_link' => 'required|string|max:255',
+            'notes' => 'nullable|string',
+            'status' => 'required|in:pending,accepted,reviewing,rejected',
+        ]);
 
         $application->update([
-            'name' => $request->name,
-            'contact' => $request->contact,
-            'role' => $request->role,
-            'portfolio_link' => $request->portfolio_link,
-            'notes' => $request->notes,
-            'status' => $request->status,
+            'name' => $validated['name'],
+            'contact' => $validated['contact'],
+            'phone_number' => $validated['phone_number'] ?? $application->phone_number,
+            'role' => $validated['role'],
+            'portfolio_link' => $validated['portfolio_link'],
+            'notes' => $validated['notes'] ?? null,
+            'status' => $validated['status'],
         ]);
 
         if ($previousStatus !== 'accepted' && $application->status === 'accepted') {
-            $email = $this->extractEmailFromContact($application->contact);
+            $email = $application->contact;
 
             if ($email) {
                 try {
@@ -94,12 +120,24 @@ class FilmApplicationController extends Controller
     public function destroy($id)
     {
         $application = FilmApplication::findOrFail($id);
-
         $application->delete();
-
         return response()->json([
             'message' => 'Application deleted successfully'
         ]);
+    }
+
+    private function normalizeContactFields(Request $request): void
+    {
+        $email = $this->extractEmailFromContact($request->contact);
+        $phoneNumber = $request->phone_number ?: $this->extractPhoneNumberFromContact($request->contact);
+
+        if ($email) {
+            $request->merge(['contact' => $email]);
+        }
+
+        if ($phoneNumber) {
+            $request->merge(['phone_number' => $phoneNumber]);
+        }
     }
 
     private function extractEmailFromContact(?string $contact): ?string
@@ -114,4 +152,22 @@ class FilmApplicationController extends Controller
             ? $matches[0]
             : null;
     }
+
+    private function extractPhoneNumberFromContact(?string $contact): ?string
+    {
+        if (! $contact) {
+            return null;
+        }
+
+        preg_match_all('/\+?\d[\d\s().-]{8,}\d/', $contact, $matches);
+
+        foreach ($matches[0] ?? [] as $candidate) {
+            if (preg_match_all('/\d/', $candidate) >= 10) {
+                return trim($candidate);
+            }
+        }
+
+        return null;
+    }
+
 }

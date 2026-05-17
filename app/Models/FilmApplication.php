@@ -21,6 +21,7 @@ class FilmApplication extends Model
         'film_id',
         'name',
         'contact',
+        'phone_number',
         'role',
         'portfolio_link',
         'notes',

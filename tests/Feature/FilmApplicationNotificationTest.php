@@ -39,7 +39,8 @@ class FilmApplicationNotificationTest extends TestCase
             'user_id' => $user->id,
             'film_id' => $film->id,
             'name' => 'Applicant Name',
-            'contact' => 'applicant@example.com / 081234567890',
+            'contact' => 'applicant@example.com',
+            'phone_number' => '081234567890',
             'role' => 'Talent',
             'portfolio_link' => 'https://example.com/portfolio',
             'notes' => 'Test notes.',
@@ -54,7 +55,8 @@ class FilmApplicationNotificationTest extends TestCase
         $this->assertDatabaseHas('film_applications', [
             'user_id' => $user->id,
             'film_id' => $film->id,
-            'contact' => 'applicant@example.com / 081234567890',
+            'contact' => 'applicant@example.com',
+            'phone_number' => '081234567890',
             'status' => 'pending',
         ]);
 
@@ -86,7 +88,8 @@ class FilmApplicationNotificationTest extends TestCase
             'user_id' => $user->id,
             'film_id' => $film->id,
             'name' => 'Applicant Name',
-            'contact' => 'applicant@example.com / 081234567890',
+            'contact' => 'applicant@example.com',
+            'phone_number' => '081234567890',
             'role' => 'Talent',
             'portfolio_link' => 'https://example.com/portfolio',
             'notes' => 'Test notes.',
@@ -96,6 +99,7 @@ class FilmApplicationNotificationTest extends TestCase
         $response = $this->putJson("/api/film-applications/{$application->id}", [
             'name' => $application->name,
             'contact' => $application->contact,
+            'phone_number' => $application->phone_number,
             'role' => $application->role,
             'portfolio_link' => $application->portfolio_link,
             'notes' => $application->notes,

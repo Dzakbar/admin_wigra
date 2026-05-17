@@ -16,7 +16,8 @@ const ApplyFilm = () => {
         user_id: user ? user.id : '',
         film_id: '',
         name: user ? user.name : '',
-        contact: user ? `${user.email} / ${user.telephone_number || ''}` : '',
+        contact: user ? user.email : '',
+        phone_number: user ? user.telephone_number || '' : '',
         role: 'Talent',
         portfolio_link: '',
         notes: ''
@@ -62,7 +63,8 @@ const ApplyFilm = () => {
                 user_id: user.id,
                 film_id: films.length > 0 ? films[0].id : '',
                 name: user.name,
-                contact: `${user.email} / ${user.telephone_number || ''}`,
+                contact: user.email,
+                phone_number: user.telephone_number || '',
                 role: 'Talent',
                 portfolio_link: '',
                 notes: ''
@@ -131,8 +133,12 @@ const ApplyFilm = () => {
                                         <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" />
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Contact Info (Email / WhatsApp)</label>
-                                        <input type="text" name="contact" required value={formData.contact} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" placeholder="example@mail.com / 0812..." />
+                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Email</label>
+                                        <input type="email" name="contact" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" value={formData.contact} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" placeholder="example@gmail.com" />
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Phone Number</label>
+                                        <input type="tel" name="phone_number" required pattern="(?=(?:\D*\d){10,})[+\d][\d\s().-]*" title="Phone number must contain at least 10 numbers" value={formData.phone_number} onChange={handleChange} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-wigra-accent" placeholder="081234567890" />
                                     </div>
                                     <div>
                                         <label className="block text-xs uppercase tracking-wider text-white/60 mb-2">Target Role</label>

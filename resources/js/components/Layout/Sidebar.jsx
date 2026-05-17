@@ -16,7 +16,10 @@ const Sidebar = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
-    const isSuperAdmin = user?.role === 'super_admin';
+    const isSuperAdmin = user?.role === 'super_admin' || user?.role === 'superadmin';
+    const companyUrl = user
+        ? `http://localhost:8181/auth-callback?token=${encodeURIComponent(localStorage.getItem('auth_token') || '')}&user=${encodeURIComponent(JSON.stringify(user))}`
+        : 'http://localhost:8181';
 
     let navItems = [
         { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', exact: true },
@@ -45,10 +48,10 @@ const Sidebar = ({ isOpen, onClose }) => {
             }`}>
                 {/* Logo Area */}
                 <div className="h-20 flex items-center justify-between px-8 border-b border-white/10 shrink-0">
-                    <div className="flex items-center">
-                        <h1 className="font-serif text-2xl tracking-widest text-white">WIGRA.</h1>
-                        <span className="text-[10px] uppercase tracking-widest text-wigra-accent ml-2 mt-1">Admin</span>
-                    </div>
+                    <a href={companyUrl} className="flex items-center group transition-all duration-300">
+                        <h1 className="font-serif text-2xl tracking-widest text-white group-hover:text-wigra-accent transition-colors">WIGRA.</h1>
+                        <span className="text-[10px] uppercase tracking-widest text-wigra-accent ml-2 mt-1 border border-wigra-accent/30 px-1 rounded">Admin</span>
+                    </a>
                     <button onClick={onClose} className="lg:hidden text-white/60 hover:text-white">
                         <X size={20} />
                     </button>

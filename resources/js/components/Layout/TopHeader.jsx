@@ -9,7 +9,7 @@ const TopHeader = ({ onToggleSidebar }) => {
     const user = userString ? JSON.parse(userString) : null;
     
     const userName = user?.name || 'Admin';
-    const userRoleText = user?.role === 'super_admin' ? 'Super Admin' : user?.role === 'admin' ? 'Admin' : 'User';
+    const userRoleText = user?.role === 'super_admin' || user?.role === 'superadmin' ? 'Super Admin' : user?.role === 'admin' ? 'Admin' : 'User';
     const profilePic = user?.profile_photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=1a1a1a&color=fff`;
     
     // Simple breadcrumb logic based on path

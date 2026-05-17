@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 
 const Login = () => {
@@ -80,6 +80,9 @@ const Login = () => {
                                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-wigra-accent focus:ring-1 focus:ring-wigra-accent transition-all"
                                 placeholder="••••••••"
                             />
+                            <p className="text-xs text-white/50 mt-3">
+                                silahkah register terlebih dahulu <Link to="/register" className="text-wigra-accent hover:text-white transition-colors">disini</Link>
+                            </p>
                         </div>
 
                         <button 
