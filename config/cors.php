@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:8181', 'http://127.0.0.1:8181', 'http://localhost:8000'],
+    'allowed_origins' => ['http://localhost:8181', 'https://wigra-production.vercel.app/', 'https://admin-wigra.vercel.app/'],
 
     'allowed_origins_patterns' => [],
 
