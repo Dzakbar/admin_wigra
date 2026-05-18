@@ -1,0 +1,29 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public",
+  "buildCommand": "npm ci && npm run build",
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.9.0",
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/build/(.*)",
+      "dest": "/public/build/$1"
+    },
+    {
+      "src": "/storage/(.*)",
+      "dest": "/public/storage/$1"
+    },
+    {
+      "src": "/(favicon\\.ico|robots\\.txt|sitemap\\.xml|manifest\\.webmanifest)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/(.*\\.(css|js|mjs|png|jpg|jpeg|gif|svg|ico|webp|avif|bmp|woff|woff2|ttf|eot|map|txt|xml|json))",
+      "dest": "/public/$1"
+    }
+  ]
+}
