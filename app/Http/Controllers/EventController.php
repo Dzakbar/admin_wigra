@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Event;
 
 class EventController extends Controller
@@ -19,8 +20,8 @@ class EventController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('events', 'public');
-            $data['photo'] = '/storage/' . $path;
+            $path = $request->file('photo')->store('events', 's3');
+            $data['photo'] = Storage::disk('s3')->url($path);
         }
 
         $event = Event::create($data);
@@ -44,8 +45,8 @@ class EventController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('events', 'public');
-            $data['photo'] = '/storage/' . $path;
+            $path = $request->file('photo')->store('events', 's3');
+            $data['photo'] = Storage::disk('s3')->url($path);
         }
 
         $event->update($data);

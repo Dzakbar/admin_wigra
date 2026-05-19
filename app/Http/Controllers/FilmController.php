@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Film;
 
 class FilmController extends Controller
@@ -19,8 +20,8 @@ class FilmController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('films', 'public');
-            $data['photo'] = '/storage/' . $path;
+            $path = $request->file('photo')->store('films', 's3');
+            $data['photo'] = Storage::disk('s3')->url($path);
         }
 
         $film = Film::create($data);
@@ -44,8 +45,8 @@ class FilmController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('films', 'public');
-            $data['photo'] = '/storage/' . $path;
+            $path = $request->file('photo')->store('films', 's3');
+            $data['photo'] = Storage::disk('s3')->url($path);
         }
 
         $film->update($data);
