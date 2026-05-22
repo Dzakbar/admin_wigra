@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Support\PublicUpload;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -23,8 +24,7 @@ class TeamController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('teams', 'public');
-            $data['photo'] = '/storage/' . $path;
+            $data['photo'] = PublicUpload::store($request->file('photo'), 'teams');
         }
 
         $team = \App\Models\Team::create($data);
@@ -52,8 +52,7 @@ class TeamController extends Controller
         $data = $request->all();
 
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('teams', 'public');
-            $data['photo'] = '/storage/' . $path;
+            $data['photo'] = PublicUpload::store($request->file('photo'), 'teams');
         }
 
         $team->update($data);

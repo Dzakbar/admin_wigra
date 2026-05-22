@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\PublicUpload;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -23,8 +24,7 @@ class AuthController extends Controller
 
         $profilePhotoUrl = null;
         if ($request->hasFile('profile_photo')) {
-            $path = $request->file('profile_photo')->store('profiles', 'public');
-            $profilePhotoUrl = '/storage/' . $path;
+            $profilePhotoUrl = PublicUpload::store($request->file('profile_photo'), 'profiles');
         }
 
         $user = User::create([
