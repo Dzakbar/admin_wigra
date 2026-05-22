@@ -12,6 +12,10 @@ class PublicUpload
         $disk = env('FILE_UPLOAD_DISK', 'public');
         $path = $file->store($directory, $disk);
 
+        if ($disk === 's3' && env('PUBLIC_STORAGE_URL')) {
+            return rtrim(env('PUBLIC_STORAGE_URL'), '/').'/'.$path;
+        }
+
         return Storage::disk($disk)->url($path);
     }
 }
