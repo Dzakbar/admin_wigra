@@ -18,4 +18,21 @@ class PublicUpload
 
         return Storage::disk($disk)->url($path);
     }
+
+    public static function publicUrl(?string $url): ?string
+    {
+        if (! $url) {
+            return $url;
+        }
+
+        if (str_contains($url, '/storage/v1/s3/')) {
+            return str_replace('/storage/v1/s3/', '/storage/v1/object/public/', $url);
+        }
+
+        if (! str_starts_with($url, 'http') && env('PUBLIC_STORAGE_URL')) {
+            return rtrim(env('PUBLIC_STORAGE_URL'), '/').'/'.ltrim($url, '/');
+        }
+
+        return $url;
+    }
 }

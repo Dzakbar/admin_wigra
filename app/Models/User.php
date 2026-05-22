@@ -5,9 +5,11 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\FilmApplication;
+use App\Support\PublicUpload;
 
 class User extends Authenticatable
 {
@@ -57,6 +59,13 @@ class User extends Authenticatable
     public function registrations()
     {
         return $this->hasMany(FilmApplication::class);
+    }
+
+    protected function profilePhoto(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => PublicUpload::publicUrl($value),
+        );
     }
 
     // Check if user is admin
