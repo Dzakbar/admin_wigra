@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import api from '../../api/axios';
+import { getCompanyAuthCallbackUrl, getCompanyUrl } from '../../utils/companyRedirect';
 import { 
     LayoutDashboard, 
     Film, 
@@ -18,8 +19,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     const user = userString ? JSON.parse(userString) : null;
     const isSuperAdmin = user?.role === 'super_admin' || user?.role === 'superadmin';
     const companyUrl = user
-        ? `http://localhost:8181/auth-callback?token=${encodeURIComponent(localStorage.getItem('auth_token') || '')}&user=${encodeURIComponent(JSON.stringify(user))}`
-        : 'http://localhost:8181';
+        ? getCompanyAuthCallbackUrl(localStorage.getItem('auth_token') || '', user)
+        : getCompanyUrl();
 
     let navItems = [
         { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard', exact: true },

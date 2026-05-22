@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
+import { getCompanyAuthCallbackUrl } from '../utils/companyRedirect';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -38,8 +39,7 @@ const Register = () => {
                 if (user.role === 'admin' || user.role === 'superadmin' || user.role === 'super_admin') {
                     navigate('/admin');
                 } else {
-                    const companyUrl = `http://localhost:8181/auth-callback?token=${access_token}&user=${encodeURIComponent(JSON.stringify(user))}`;
-                    window.location.href = companyUrl;
+                    window.location.href = getCompanyAuthCallbackUrl(access_token, user);
                 }
             }
         } catch (err) {
