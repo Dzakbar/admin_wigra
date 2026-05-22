@@ -19,7 +19,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:8181', 'https://wigra-production.vercel.app', 'https://admin-wigra.vercel.app'],
+    'allowed_origins' => array_filter(array_map('trim', explode(',', env(
+        'CORS_ALLOWED_ORIGINS',
+        'http://localhost:8181,http://localhost:5173,https://wigra-production.vercel.app,https://wigra-production-house.vercel.app,https://admin-wigra.vercel.app'
+    )))),
 
     'allowed_origins_patterns' => [],
 
