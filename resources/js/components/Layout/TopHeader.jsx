@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Search, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const TopHeader = ({ onToggleSidebar }) => {
@@ -32,24 +32,8 @@ const TopHeader = ({ onToggleSidebar }) => {
             </div>
 
             <div className="flex items-center gap-6">
-                {/* Search Bar */}
-                <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-4 py-2">
-                    <Search size={16} className="text-white/40" />
-                    <input 
-                        type="text" 
-                        placeholder="Search..." 
-                        className="bg-transparent border-none outline-none text-sm text-white px-3 w-48 placeholder:text-white/30"
-                    />
-                </div>
-
-                {/* Notifications */}
-                <button className="relative text-white/60 hover:text-white transition-colors">
-                    <Bell size={20} />
-                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-wigra-accent rounded-full"></span>
-                </button>
-
                 {/* Profile Avatar */}
-                <div className="flex items-center gap-3 pl-6 border-l border-white/10">
+                <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-wigra-muted overflow-hidden border border-white/20">
                         <img 
                             src={profilePic}
